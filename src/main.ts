@@ -11,7 +11,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'https://fe-j6sp.vercel.app'
+      'https://fe-j6sp.vercel.app','https://thayvang.vercel.app'
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
