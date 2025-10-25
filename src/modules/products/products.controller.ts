@@ -9,13 +9,17 @@ import {
   Query,
   ValidationPipe,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { Public } from '../../auth/decoration/setMetadata';
 
 @Controller('api/products')
+@UseGuards(JwtAuthGuard)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -38,6 +42,7 @@ export class ProductsController {
     }
   }
 
+  @Public()
   @Get()
   async findAll(@Query() queryDto: QueryProductDto) {
     try {
@@ -51,6 +56,7 @@ export class ProductsController {
     }
   }
 
+  @Public()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {

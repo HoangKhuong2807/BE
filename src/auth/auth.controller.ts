@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Controller,
@@ -20,7 +19,7 @@ import type { Response } from 'express';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   @Post('login')
@@ -50,6 +49,4 @@ export class AuthController {
   async logout(@Res({ passthrough: true }) response: Response) {
     return this.authService.logout(response);
   }
-
-  
 }

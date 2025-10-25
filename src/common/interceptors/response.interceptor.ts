@@ -27,7 +27,7 @@ export class ResponseInterceptor implements NestInterceptor {
           data: data,
           timestamp: new Date().toISOString(),
         };
-      })
+      }),
     );
   }
 }

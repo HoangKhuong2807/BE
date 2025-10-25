@@ -22,9 +22,8 @@ export const User = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     return request.user;
-  }
+  },
 );
-
 
 export const PERMISSION_KEY = 'permissions';
 export const Permission = (...permissions: string[]) =>
@@ -32,7 +31,7 @@ export const Permission = (...permissions: string[]) =>
 
 export function IsOnlyOneDefined(
   properties: string[],
-  validationOptions?: ValidationOptions
+  validationOptions?: ValidationOptions,
 ) {
   return function (object: object, propertyName: string) {
     registerDecorator({
@@ -44,7 +43,7 @@ export function IsOnlyOneDefined(
         validate(_: any, args: ValidationArguments) {
           const obj = args.object as Record<string, any>;
           const definedCount = properties.filter(
-            (prop) => obj[prop] !== undefined
+            (prop) => obj[prop] !== undefined,
           ).length;
           return definedCount === 1;
         },

@@ -55,20 +55,26 @@ export class PaginationResponseDto<T> {
 }
 
 // Helper function để build MongoDB sort object
-export function buildSortObject(sortBy: string, sortOrder: 'asc' | 'desc' = 'desc'): Record<string, 1 | -1> {
+export function buildSortObject(
+  sortBy: string,
+  sortOrder: 'asc' | 'desc' = 'desc',
+): Record<string, 1 | -1> {
   const sort: Record<string, 1 | -1> = {};
   sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
   return sort;
 }
 
 // Helper function để build search filter cho MongoDB
-export function buildSearchFilter(search: string, searchFields: string[]): Record<string, any> {
+export function buildSearchFilter(
+  search: string,
+  searchFields: string[],
+): Record<string, any> {
   if (!search || !searchFields.length) return {};
 
   const searchRegex = new RegExp(search, 'i');
   return {
-    $or: searchFields.map(field => ({
-      [field]: { $regex: searchRegex }
-    }))
+    $or: searchFields.map((field) => ({
+      [field]: { $regex: searchRegex },
+    })),
   };
 }

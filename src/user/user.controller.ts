@@ -41,16 +41,16 @@ export class UserController {
   @CustomMessage('Fetch List user with Paginate')
   @Get()
   async getUsers(
-    @Query(new ValidationPipe({ transform: true })) query: SearchUserDto
+    @Query(new ValidationPipe({ transform: true })) query: SearchUserDto,
   ): Promise<PaginationResponseDto<any>> {
     console.log('🔍 User Controller - Standardized query received:', query);
-    
+
     // Handle backward compatibility with old qs parameter
     if (query.qs && !query.search) {
       console.log('🔍 Converting legacy qs parameter to search:', query.qs);
       // Parse legacy qs format: "name:search,email:search" -> "search"
       const qsParts = query.qs.split(',');
-      const searchPart = qsParts.find(part => part.includes('search='));
+      const searchPart = qsParts.find((part) => part.includes('search='));
       if (searchPart) {
         query.search = searchPart.split('=')[1];
       }
@@ -80,7 +80,7 @@ export class UserController {
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-    @User() user: IUser
+    @User() user: IUser,
   ) {
     return this.userService.update(id, updateUserDto, user);
   }
@@ -91,6 +91,4 @@ export class UserController {
   remove(@Param('id') id: string, @User() user: IUser) {
     return this.userService.remove(id, user);
   }
-
-  
 }

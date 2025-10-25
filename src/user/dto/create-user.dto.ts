@@ -35,7 +35,6 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsMongoId({ message: 'role phải là một Mongo ObjectId hợp lệ' })
-
   role?: string; // có thể là ObjectId dưới dạng string
 }
 export class RegisterUserDto {

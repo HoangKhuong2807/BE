@@ -14,9 +14,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>(
-          'JWT_SECRET_TOKEN_SECRET'
-        ),
+        secret: configService.get<string>('JWT_SECRET_TOKEN_SECRET'),
         signOptions: {
           expiresIn:
             configService.get<string>('JWT_EXPIRATION_TIME') || '3600s',
@@ -27,6 +25,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService,MongooseModule],
+  exports: [UserService, MongooseModule],
 })
 export class UserModule {}

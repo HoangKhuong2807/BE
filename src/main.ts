@@ -10,9 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: [
-      'https://fe-j6sp.vercel.app','https://thayvang.vercel.app'
-    ],
+    origin: ['https://fe-j6sp.vercel.app', 'https://thayvang.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   });
@@ -36,4 +34,3 @@ async function bootstrap() {
   console.log(`Application is running on: http://localhost:${port}`);
 }
 bootstrap();
-

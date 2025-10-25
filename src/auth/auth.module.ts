@@ -9,7 +9,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-
 @Module({
   imports: [
     forwardRef(() => UserModule),
@@ -30,5 +29,3 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   providers: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}
-
-

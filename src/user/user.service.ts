@@ -51,18 +51,18 @@ import type { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import mongoose, { Types } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { PaginationResult, SearchUserDto } from './dto/user.dto';
-import { 
-  PaginationQueryDto, 
-  PaginationResponseDto, 
-  buildSortObject, 
-  buildSearchFilter 
+import {
+  PaginationQueryDto,
+  PaginationResponseDto,
+  buildSortObject,
+  buildSearchFilter,
 } from '../common/dto/pagination.dto';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: SoftDeleteModel<UserDocument>, // 👈 CHÚ Ý
     private readonly JwtService: JwtService, // Thêm JwtService nếu cần
-    private readonly configService: ConfigService // Thêm ConfigService nếu cần
+    private readonly configService: ConfigService, // Thêm ConfigService nếu cần
   ) {}
 
   //hashPassword function to hash the password
@@ -113,7 +113,9 @@ export class UserService {
   }
 
   // Chuẩn hóa search users theo format mới
-  async searchUsers(query: SearchUserDto): Promise<PaginationResponseDto<User>> {
+  async searchUsers(
+    query: SearchUserDto,
+  ): Promise<PaginationResponseDto<User>> {
     const {
       page = 1,
       limit = 10,
@@ -180,15 +182,15 @@ export class UserService {
 
     // Trả về theo format chuẩn
     const result = new PaginationResponseDto(data, total, page, limit);
-    
+
     console.log('🚀 User Service - Returning standardized format:', {
       hasData: !!result.data,
       dataLength: result.data ? result.data.length : 0,
       hasMeta: !!result.meta,
       metaTotal: result.meta ? result.meta.total : 'no meta',
-      resultKeys: Object.keys(result)
+      resultKeys: Object.keys(result),
     });
-    
+
     return result;
   }
 
@@ -229,7 +231,7 @@ export class UserService {
   }
 
   private async buildMongoFilter(
-    conditions: Record<string, string>
+    conditions: Record<string, string>,
   ): Promise<any> {
     const filter: any = {};
 
@@ -270,14 +272,14 @@ export class UserService {
 
           console.log(
             '🔍 Found matching roles for "' + value + '":',
-            matchingRoles
+            matchingRoles,
           );
 
           if (matchingRoles.length > 0) {
             // Handle both ObjectId and string types for role field
             const roleIds = matchingRoles.map((role) => role._id);
             const roleStrings = matchingRoles.map((role) =>
-              role._id.toString()
+              role._id.toString(),
             );
 
             filter.role = {
@@ -286,13 +288,13 @@ export class UserService {
 
             console.log(
               '✅ Role filter applied with both ObjectId and string:',
-              filter.role
+              filter.role,
             );
           } else {
             // Nếu không tìm thấy role, đặt điều kiện không thể match
             filter.role = null;
             console.log(
-              '❌ No matching roles found, setting role filter to null'
+              '❌ No matching roles found, setting role filter to null',
             );
           }
         } else if (key === 'search') {
@@ -322,7 +324,7 @@ export class UserService {
 
   // Method để search by role name thay vì ID (DEPRECATED - Sử dụng searchUsers instead)
   async searchUsersByRoleName(
-    query: SearchUserDto
+    query: SearchUserDto,
   ): Promise<PaginationResult<User>> {
     const { page = 1, limit = 10, qs, sortBy, sortOrder } = query;
 
@@ -491,7 +493,7 @@ export class UserService {
 
   async validatePassword(
     plainPassword: string,
-    hashedPassword: string
+    hashedPassword: string,
   ): Promise<boolean> {
     return await compare(plainPassword, hashedPassword);
   }

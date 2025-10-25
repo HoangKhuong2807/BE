@@ -13,7 +13,6 @@ import { UserService } from 'src/user/user.service';
 import { Response } from 'express';
 import { IUser } from 'src/user/user.interface';
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -32,7 +31,7 @@ export class AuthService {
 
     const isValidPassword = await this.userService.validatePassword(
       pass,
-      user.password
+      user.password,
     );
 
     if (!isValidPassword) {
@@ -47,7 +46,7 @@ export class AuthService {
       _id: user._id,
       email: user.email,
       username: user.name,
-      role:user.role
+      role: user.role,
     };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -56,7 +55,7 @@ export class AuthService {
     });
     const refreshToken = await this.jwtService.sign(payload, {
       expiresIn: this.configService.get<string>(
-        'JWT_EXPIRATION_REFRESHTOKEN_TIME'
+        'JWT_EXPIRATION_REFRESHTOKEN_TIME',
       ),
       secret: this.configService.get<string>('JWT_SECRET_TOKEN_SECRET'), // Sử dụng cùng secret
     });
@@ -64,15 +63,16 @@ export class AuthService {
       await this.userService.hashedSomething(refreshToken);
     await this.userService.updateRefreshToken(user._id, hashedRefreshToken);
     // Set cả accessToken và refreshToken cookies
-    const isProduction = this.configService.get<string>('NODE_ENV') === 'production';
-    
+    const isProduction =
+      this.configService.get<string>('NODE_ENV') === 'production';
+
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: isProduction, // Chỉ secure khi production
       sameSite: 'lax',
       maxAge: 15 * 60 * 1000, // 15 minutes
     });
-    
+
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: isProduction, // Chỉ secure khi production
@@ -102,77 +102,79 @@ export class AuthService {
     return register;
   }
 
- refreshToken = async (refreshToken: string, res: Response) => {
-  if (!refreshToken) {
-    throw new BadRequestException('Refresh token not found');
-  }
+  refreshToken = async (refreshToken: string, res: Response) => {
+    if (!refreshToken) {
+      throw new BadRequestException('Refresh token not found');
+    }
 
-  const user = await this.userService.findUserByAccessToken(refreshToken);
-  if (!user) {
-    throw new BadRequestException('Invalid refresh token');
-  }
+    const user = await this.userService.findUserByAccessToken(refreshToken);
+    if (!user) {
+      throw new BadRequestException('Invalid refresh token');
+    }
 
-  // Lấy role từ RoleService
+    // Lấy role từ RoleService
 
-  const payload = {
-    _id: user._id,
-    email: user.email,
-    username: user.name,
-  };
-
-  const accessToken = this.jwtService.sign(payload, {
-    expiresIn: this.configService.get<string>('JWT_EXPIRATION_TIME'),
-    secret: this.configService.get<string>('JWT_SECRET_TOKEN_SECRET'),
-  });
-
-  const isProduction = this.configService.get<string>('NODE_ENV') === 'production';
-
-  res.cookie('accessToken', accessToken, {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: 'lax',
-    maxAge: 15 * 60 * 1000, // 15 minutes
-  });
-
-  return {
-    accessToken,
-    user: {
+    const payload = {
       _id: user._id,
-      name: user.name,
       email: user.email,
-    },
-  };
-};
+      username: user.name,
+    };
 
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: this.configService.get<string>('JWT_EXPIRATION_TIME'),
+      secret: this.configService.get<string>('JWT_SECRET_TOKEN_SECRET'),
+    });
+
+    const isProduction =
+      this.configService.get<string>('NODE_ENV') === 'production';
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    });
+
+    return {
+      accessToken,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    };
+  };
 
   async logout(res: Response) {
-  const refreshToken = res.req.cookies['refreshToken'];
+    const refreshToken = res.req.cookies['refreshToken'];
 
-  // Ép kiểu trả về là IUser, nếu không thể sửa service thì dùng as IUser
-  const user = await this.userService.findUserByAccessToken(refreshToken)as unknown as IUser;
+    // Ép kiểu trả về là IUser, nếu không thể sửa service thì dùng as IUser
+    const user = (await this.userService.findUserByAccessToken(
+      refreshToken,
+    )) as unknown as IUser;
 
-  if (!user || !user._id) {
-    return { message: 'User not found or already logged out' };
+    if (!user || !user._id) {
+      return { message: 'User not found or already logged out' };
+    }
+
+    // Ép kiểu ObjectId thành string
+    const userId = user._id.toString();
+
+    await this.userService.updateRefreshToken(userId, '');
+
+    // Xoá cookie ở client
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+
+    return { message: 'Logout successful' };
   }
-
-  // Ép kiểu ObjectId thành string
-  const userId = user._id.toString();
-
-  await this.userService.updateRefreshToken(userId, '');
-
-  // Xoá cookie ở client
-  res.clearCookie('refreshToken', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
-  });
-
-  res.clearCookie('accessToken', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
-  });
-
-  return { message: 'Logout successful' };
-}
 }

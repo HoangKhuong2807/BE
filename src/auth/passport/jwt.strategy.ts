@@ -16,7 +16,7 @@ interface IAuthUser {
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly configService: ConfigService,
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {
     const jwtSecret = configService.get<string>('JWT_SECRET_TOKEN_SECRET');
     if (!jwtSecret) {
@@ -42,14 +42,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any): Promise<IAuthUser> {
-    const user = await this.userModel
-      .findById(payload._id || payload.sub)
+    const user = await this.userModel.findById(payload._id || payload.sub);
     if (!user) throw new UnauthorizedException();
-
 
     return {
       _id: user._id.toString(),
       email: user.email,
+    };
   }
-}
 }
