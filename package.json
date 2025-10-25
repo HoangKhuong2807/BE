@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "echo Building Nest project... && nest build && echo Build done!",
+    "build": "echo Building Nest project... && tsc -p tsconfig.build.json && echo Build done!",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npx nest start",
     "dev": "npx nest start --watch",
