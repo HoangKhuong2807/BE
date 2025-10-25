@@ -84,9 +84,9 @@ function buildSearchFilter(search, searchFields) {
         return {};
     const searchRegex = new RegExp(search, 'i');
     return {
-        $or: searchFields.map(field => ({
-            [field]: { $regex: searchRegex }
-        }))
+        $or: searchFields.map((field) => ({
+            [field]: { $regex: searchRegex },
+        })),
     };
 }
 //# sourceMappingURL=pagination.dto.js.map

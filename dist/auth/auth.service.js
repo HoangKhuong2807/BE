@@ -42,7 +42,7 @@ let AuthService = class AuthService {
             _id: user._id,
             email: user.email,
             username: user.name,
-            role: user.role
+            role: user.role,
         };
         const accessToken = this.jwtService.sign(payload, {
             expiresIn: this.configService.get('JWT_EXPIRATION_TIME'),
@@ -123,7 +123,7 @@ let AuthService = class AuthService {
     };
     async logout(res) {
         const refreshToken = res.req.cookies['refreshToken'];
-        const user = await this.userService.findUserByAccessToken(refreshToken);
+        const user = (await this.userService.findUserByAccessToken(refreshToken));
         if (!user || !user._id) {
             return { message: 'User not found or already logged out' };
         }

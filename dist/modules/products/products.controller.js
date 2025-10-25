@@ -18,6 +18,8 @@ const products_service_1 = require("./products.service");
 const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
 const query_product_dto_1 = require("./dto/query-product.dto");
+const jwt_auth_guard_1 = require("../../auth/jwt-auth.guard");
+const setMetadata_1 = require("../../auth/decoration/setMetadata");
 let ProductsController = class ProductsController {
     productsService;
     constructor(productsService) {
@@ -112,6 +114,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "create", null);
 __decorate([
+    (0, setMetadata_1.Public)(),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
@@ -119,6 +122,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "findAll", null);
 __decorate([
+    (0, setMetadata_1.Public)(),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -142,6 +146,7 @@ __decorate([
 ], ProductsController.prototype, "remove", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('api/products'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true })),
     __metadata("design:paramtypes", [products_service_1.ProductsService])
 ], ProductsController);

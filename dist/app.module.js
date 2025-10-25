@@ -13,6 +13,8 @@ const mongoose_1 = require("@nestjs/mongoose");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const products_module_1 = require("./modules/products/products.module");
+const cart_module_1 = require("./modules/cart/cart.module");
+const orders_module_1 = require("./modules/orders/orders.module");
 const auth_module_1 = require("./auth/auth.module");
 const user_module_1 = require("./user/user.module");
 let AppModule = class AppModule {
@@ -25,7 +27,11 @@ exports.AppModule = AppModule = __decorate([
                 isGlobal: true,
             }),
             mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/ecommerce-platform'),
-            products_module_1.ProductsModule, auth_module_1.AuthModule, user_module_1.UserModule
+            products_module_1.ProductsModule,
+            cart_module_1.CartModule,
+            orders_module_1.OrdersModule,
+            auth_module_1.AuthModule,
+            user_module_1.UserModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

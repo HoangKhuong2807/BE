@@ -85,10 +85,11 @@ export class CartService {
     );
 
     await cart.save();
-    return this.cartModel
+    const updatedCart = await this.cartModel
       .findById(cart._id)
       .populate('items.productId', 'name price image')
       .exec();
+    return updatedCart!;
   }
 
   async updateCartItem(
@@ -122,10 +123,11 @@ export class CartService {
     );
 
     await cart.save();
-    return this.cartModel
+    const updatedCart = await this.cartModel
       .findById(cart._id)
       .populate('items.productId', 'name price image')
       .exec();
+    return updatedCart!;
   }
 
   async removeFromCart(userId: string, productId: string): Promise<Cart> {
@@ -148,10 +150,11 @@ export class CartService {
     );
 
     await cart.save();
-    return this.cartModel
+    const updatedCart = await this.cartModel
       .findById(cart._id)
       .populate('items.productId', 'name price image')
       .exec();
+    return updatedCart!;
   }
 
   async clearCart(userId: string): Promise<void> {

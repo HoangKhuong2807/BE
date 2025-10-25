@@ -32,7 +32,7 @@ let UserController = class UserController {
         if (query.qs && !query.search) {
             console.log('🔍 Converting legacy qs parameter to search:', query.qs);
             const qsParts = query.qs.split(',');
-            const searchPart = qsParts.find(part => part.includes('search='));
+            const searchPart = qsParts.find((part) => part.includes('search='));
             if (searchPart) {
                 query.search = searchPart.split('=')[1];
             }

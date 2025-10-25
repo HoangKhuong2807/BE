@@ -143,7 +143,7 @@ let UserService = class UserService {
             dataLength: result.data ? result.data.length : 0,
             hasMeta: !!result.meta,
             metaTotal: result.meta ? result.meta.total : 'no meta',
-            resultKeys: Object.keys(result)
+            resultKeys: Object.keys(result),
         });
         return result;
     }
