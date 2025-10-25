@@ -13,7 +13,12 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: ['https://fe-j6sp.vercel.app', 'https://thayvang.vercel.app'],
+        origin: [
+            'https://fe-j6sp.vercel.app',
+            'https://thayvang.vercel.app',
+            'http://localhost:3000',
+            'http://localhost:3001',
+        ],
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         credentials: true,
     });
