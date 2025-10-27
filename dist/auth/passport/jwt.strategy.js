@@ -30,16 +30,21 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         }
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromExtractors([
+                passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
                 (req) => {
                     const accessToken = req.cookies?.accessToken;
                     const refreshToken = req.cookies?.refreshToken;
+                    console.log('🔑 JWT Strategy - Cookies:', {
+                        hasAccessToken: !!accessToken,
+                        hasRefreshToken: !!refreshToken,
+                        accessTokenPreview: accessToken ? accessToken.substring(0, 15) + '...' : 'none'
+                    });
                     if (accessToken)
                         return accessToken;
                     if (refreshToken)
                         return refreshToken;
                     return null;
                 },
-                passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
             ]),
             ignoreExpiration: false,
             secretOrKey: jwtSecret,
